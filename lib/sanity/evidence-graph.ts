@@ -87,7 +87,10 @@ function client(write = false) {
     dataset: data,
     apiVersion: process.env.SANITY_API_VERSION || "2026-09-21",
     useCdn: false,
-    token: write ? token() : process.env.SANITY_API_READ_TOKEN?.trim(),
+    // A write token also has read access, so a single server-only Editor token
+    // is enough for a private demo dataset. Prefer a narrower read token when
+    // one is explicitly supplied.
+    token: write ? token() : process.env.SANITY_API_READ_TOKEN?.trim() || token(),
     perspective: "published",
   });
 }
