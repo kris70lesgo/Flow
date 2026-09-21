@@ -68,11 +68,11 @@ and the human recommendation survive as separate, queryable records. The Evidenc
 screen uses GROQ to read the graph when configured and labels its honest local
 mirror otherwise.
 
-The current Sanity project is `af8ykvwc`, dataset `production`. To run it:
+The current Sanity project is `af8ykwvc`, dataset `production`. To run it:
 
 ```bash
 # add these to .env.local — never commit the write token
-NEXT_PUBLIC_SANITY_PROJECT_ID=af8ykvwc
+NEXT_PUBLIC_SANITY_PROJECT_ID=af8ykwvc
 NEXT_PUBLIC_SANITY_DATASET=production
 SANITY_API_WRITE_TOKEN=replace-with-an-editor-token
 
