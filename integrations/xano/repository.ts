@@ -157,6 +157,14 @@ export class XanoRepository implements IAegisRepository {
     if (!row) throw new Error(`Xano has no incident row for ${incident.id} (read returned ${"empty or unmatched"})`);
 
     const body = {
+      // Xano's generated PATCH endpoint treats every omitted input as null. Send
+      // the stable core fields back with the workflow update so an evidence write
+      // cannot erase the incident identity or business-impact data.
+      incident_key: incident.id,
+      supplier: incident.supplier,
+      affected_product: incident.affectedProduct,
+      inventory_days: incident.inventoryDays,
+      revenue_exposure: incident.revenueExposure,
       state: incident.state,
       status: incident.status,
       evidence_json: {
@@ -187,6 +195,11 @@ export class XanoRepository implements IAegisRepository {
     if (!row) return;
 
     await xano.patch(`/incident/${row.id}`, {
+      incident_key: incident.id,
+      supplier: incident.supplier,
+      affected_product: incident.affectedProduct,
+      inventory_days: incident.inventoryDays,
+      revenue_exposure: incident.revenueExposure,
       state: incident.state,
       status: incident.status,
       evidence_json: {
