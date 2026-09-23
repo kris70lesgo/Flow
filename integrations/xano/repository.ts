@@ -352,10 +352,13 @@ export class XanoRepository implements IAegisRepository {
     // so a one-time runtime seed stays under it (slow, but it only happens once —
     // prefer `node scripts/seed-xano.mjs` + XANO_AUTO_SEED=false).
     const step = Number(process.env.XANO_SEED_DELAY_MS ?? 2200);
-    const incidentRow = await xano.post("/incident", {
+    // The public incident endpoint accepts one JSON input named `record`, so the
+    // entire row is passed explicitly instead of relying on Xano's generated
+    // per-column inputs.
+    const incidentRow = await xano.post("/incident", { record: {
       incident_key: d.id, supplier: d.supplier, affected_product: d.affectedProduct, status: d.status,
       inventory_days: d.inventoryDays, revenue_exposure: d.revenueExposure, state: d.state, evidence_json: null,
-    });
+    }});
     for (const s of d.alternativeSuppliers) {
       await pace(step);
       const sRow = await xano.post("/supplier", {

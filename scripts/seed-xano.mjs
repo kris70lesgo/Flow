@@ -75,7 +75,8 @@ async function main() {
     process.exit(1);
   }
 
-  const inc = await req("POST", "/incident", INCIDENT);
+  // The hardened incident endpoint uses a single JSON `record` input.
+  const inc = await req("POST", "/incident", { record: INCIDENT });
   console.log(`  incident #${inc.id}`);
   for (const s of SUPPLIERS) {
     await sleep(DELAY);
