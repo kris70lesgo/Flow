@@ -53,6 +53,12 @@ type EvidenceJson =
        * with the table filling in behind as budget allows.
        */
       auditLog?: Incident["auditLog"] | null;
+      /**
+       * Complete supplier evidence snapshot. This keeps the working investigation
+       * durable in a single Xano write; the optional normalized tables may catch
+       * up later without making the user-facing flow depend on them.
+       */
+      suppliers?: Supplier[] | null;
     })
   | null;
 
@@ -72,6 +78,21 @@ function toVerdicts(incident: Incident): SupplierVerdict[] {
     recommendationReasoning: s.recommendationReasoning ?? "",
     claims: s.claims,
   }));
+}
+
+function toEvidenceJson(incident: Incident): EvidenceJson {
+  return {
+    verdicts: toVerdicts(incident),
+    suppliers: incident.alternativeSuppliers,
+    auditLog: incident.auditLog,
+    externalSources: incident.externalSources,
+    domainFootprints: incident.domainFootprints,
+    documentsProcessed: incident.documentsProcessed,
+    apiActivity: incident.apiActivity,
+    decision: incident.decision,
+    generatedDocument: incident.generatedDocument,
+    signature: incident.signature,
+  };
 }
 
 /**
@@ -167,17 +188,7 @@ export class XanoRepository implements IAegisRepository {
       revenue_exposure: incident.revenueExposure,
       state: incident.state,
       status: incident.status,
-      evidence_json: {
-        verdicts: toVerdicts(incident),
-        auditLog: incident.auditLog ?? null,
-        externalSources: incident.externalSources ?? null,
-        domainFootprints: incident.domainFootprints ?? null,
-        documentsProcessed: incident.documentsProcessed ?? null,
-        apiActivity: incident.apiActivity ?? null,
-        decision: incident.decision ?? null,
-        generatedDocument: incident.generatedDocument ?? null,
-        signature: incident.signature ?? null,
-      },
+      evidence_json: toEvidenceJson(incident),
     };
 
     try {
@@ -202,17 +213,7 @@ export class XanoRepository implements IAegisRepository {
       revenue_exposure: incident.revenueExposure,
       state: incident.state,
       status: incident.status,
-      evidence_json: {
-        verdicts: toVerdicts(incident),
-        auditLog: incident.auditLog ?? null,
-        externalSources: incident.externalSources ?? null,
-        domainFootprints: incident.domainFootprints ?? null,
-        documentsProcessed: incident.documentsProcessed ?? null,
-        apiActivity: incident.apiActivity ?? null,
-        decision: incident.decision ?? null,
-        generatedDocument: incident.generatedDocument ?? null,
-        signature: incident.signature ?? null,
-      },
+      evidence_json: toEvidenceJson(incident),
     });
 
     // The supplier/claim updates are secondary (the incident row's evidence_json
@@ -270,13 +271,24 @@ export class XanoRepository implements IAegisRepository {
   }
 
   private async assemble(row: IncidentRow): Promise<Incident> {
+    const ev: NonNullable<EvidenceJson> = row.evidence_json ?? {};
+    // The incident's JSON snapshot is the durable write path. These tables are a
+    // normalized mirror and must never make a page fail while a workspace is being
+    // provisioned or the free tier is rate-limited.
+    const optionalRows = async <T,>(table: string): Promise<T[]> => {
+      try {
+        return await this.rows<T>(table);
+      } catch {
+        return [];
+      }
+    };
     const [allSuppliers, allClaims, allAudit] = await Promise.all([
-      this.rows<SupplierRow>("supplier"),
-      this.rows<ClaimRow>("claim"),
-      this.rows<AuditRow>("audit_event"),
+      optionalRows<SupplierRow>("supplier"),
+      optionalRows<ClaimRow>("claim"),
+      optionalRows<AuditRow>("audit_event"),
     ]);
 
-    const suppliers: Supplier[] = allSuppliers
+    const normalizedSuppliers: Supplier[] = allSuppliers
       .filter((sr) => sr.incident_id === row.id)
       .map((sr) => ({
         id: sr.supplier_key,
@@ -300,8 +312,9 @@ export class XanoRepository implements IAegisRepository {
             documentEvidence: cr.document_evidence ?? undefined,
           })),
       }));
-
-    const ev: NonNullable<EvidenceJson> = row.evidence_json ?? {};
+    const suppliers: Supplier[] = normalizedSuppliers.length
+      ? normalizedSuppliers
+      : structuredClone(ev.suppliers ?? []);
 
     // Overlay the last computed verdicts onto the normalised rows. Present only
     // when a run has written them; otherwise the tables stand on their own.
@@ -357,7 +370,7 @@ export class XanoRepository implements IAegisRepository {
     // per-column inputs.
     const incidentRow = await xano.post("/incident", { record: {
       incident_key: d.id, supplier: d.supplier, affected_product: d.affectedProduct, status: d.status,
-      inventory_days: d.inventoryDays, revenue_exposure: d.revenueExposure, state: d.state, evidence_json: null,
+      inventory_days: d.inventoryDays, revenue_exposure: d.revenueExposure, state: d.state, evidence_json: toEvidenceJson(d),
     }});
     for (const s of d.alternativeSuppliers) {
       await pace(step);

@@ -1,9 +1,10 @@
 # Xano setup (optional — LOCAL mode is the default)
 
-AegisFlow talks to Xano's **default auto-generated CRUD endpoints only**. No custom
-queries, no filters, no auth logic to build. ~15 minutes.
+AegisFlow uses the `incident` table as its durable single-write evidence snapshot.
+Sanity is the canonical supplier evidence graph. The other Xano tables are optional
+normalized mirrors: they enrich the backend when configured, but never block the app.
 
-## 1. Create the four tables
+## 1. Create the incident table (required)
 
 In your workspace → **Database** → **Add table**. Create these with exactly these
 field names (types in parentheses):
@@ -11,6 +12,11 @@ field names (types in parentheses):
 **`incident`**
 `incident_key` (text) · `supplier` (text) · `affected_product` (text) · `status` (text) ·
 `inventory_days` (int) · `revenue_exposure` (int) · `state` (text) · `evidence_json` (json)
+
+## Optional normalized mirrors
+
+Create these only if you want individually queryable Xano rows in addition to the
+complete `incident.evidence_json` snapshot.
 
 **`supplier`**
 `incident_id` (int) · `supplier_key` (text) · `name` (text) · `location` (text) ·
@@ -26,11 +32,12 @@ field names (types in parentheses):
 
 > Xano adds `id`, `created_at` automatically — leave those.
 
-## 2. Generate CRUD endpoints
+## 2. Generate endpoints
 
 Go to **APIs** → **Add API Group** → name it `aegisflow` (or reuse the default group).
-For each of the four tables, use **Add API Endpoint → CRUD → "Add all CRUD operations"**
-(or the ⚡ auto-generate button). You want the standard set per table:
+Generate the standard CRUD endpoints for `incident`. Its POST endpoint must accept a
+single JSON input named `record`; this is the durable evidence write used by the app.
+The default CRUD endpoint set is optional for the mirror tables.
 
 - `GET /{table}` (list all)
 - `GET /{table}/{id}`

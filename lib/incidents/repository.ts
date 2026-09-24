@@ -302,7 +302,11 @@ class ResilientRepository implements IAegisRepository {
 
   async appendAudit(id: string, event: string, actor: "SYSTEM" | "AI" | "HUMAN"): Promise<void> {
     await this.local.appendAudit(id, event, actor);
-    this.enqueueWrite("audit", () => this.xano.appendAudit(id, event, actor));
+    // Audit events live in incident.evidence_json on the proven single-write path.
+    // Keeping the optional audit_event mirror asynchronous prevents a partially
+    // provisioned table from degrading an otherwise complete investigation.
+    const incident = await this.local.getIncident(id);
+    if (incident) this.enqueueWrite("save", () => this.xano.saveIncidentCore(incident));
   }
 }
 
