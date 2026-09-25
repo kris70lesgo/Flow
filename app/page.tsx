@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowRight, FileSearch, SearchCheck, UserCheck, AlertTriangle } from "lucide-react";
-import { AegisWordmark } from "@/components/brand";
+import { WarpWordmark } from "@/components/brand";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       <header className="flex h-14 items-center justify-between border-b px-8">
-        <AegisWordmark />
+        <WarpWordmark />
         <Link href="/dashboard" className="text-sm font-medium text-primary hover:underline">
           Open Dashboard
         </Link>
@@ -19,7 +19,7 @@ export default function Home() {
         <h1 className="text-5xl font-bold tracking-tight text-foreground">
           Everyone is selling you an autonomous agent.
           <br />
-          AegisFlow makes the opposite bet.
+          Warp makes the opposite bet.
         </h1>
         <p className="text-xl leading-relaxed text-muted-foreground">
           When a critical supplier fails, the AI does the four hours of investigation — reads the
@@ -48,7 +48,7 @@ export default function Home() {
           <p className="text-sm leading-relaxed text-muted-foreground">
             <span className="font-medium text-foreground">The demo:</span> Pacific Components Ltd. fails.
             Three replacement suppliers. The cheapest one claims &quot;Established 2018&quot; — but its
-            registration says 2021 and its ISO certificate has no registry match. AegisFlow finds the
+            registration says 2021 and its ISO certificate has no registry match. Warp finds the
             contradiction in the extracted document text and refuses to treat the claim as verified.
           </p>
         </div>

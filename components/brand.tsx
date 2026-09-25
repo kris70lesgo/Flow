@@ -1,40 +1,23 @@
 import { cn } from "@/lib/utils";
 
-/** The AegisFlow mark — a shield (aegis) with investigation streams flowing to a
- *  checkmark that only a human completes. */
-export function AegisMark({ className }: { className?: string }) {
+/** The Warp mark — forward motion in three deliberate, evidence-led steps. */
+export function WarpMark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 96 96" className={cn("h-6 w-6", className)} fill="none" aria-hidden>
-      <defs>
-        <linearGradient id="aegis-mark" x1="26" y1="14" x2="70" y2="88" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#3B82F6" />
-          <stop offset="1" stopColor="#1D4ED8" />
-        </linearGradient>
-        <clipPath id="aegis-clip">
-          <path d="M21 25C21 21.69 23.69 19 27 19H69C72.31 19 75 21.69 75 25V47.5C75 66.4 61.9 80.1 49.3 86.6C48.48 87.02 47.52 87.02 46.7 86.6C34.1 80.1 21 66.4 21 47.5V25Z" />
-        </clipPath>
-      </defs>
-      <path
-        d="M21 25C21 21.69 23.69 19 27 19H69C72.31 19 75 21.69 75 25V47.5C75 66.4 61.9 80.1 49.3 86.6C48.48 87.02 47.52 87.02 46.7 86.6C34.1 80.1 21 66.4 21 47.5V25Z"
-        fill="url(#aegis-mark)"
-      />
-      <g clipPath="url(#aegis-clip)" strokeLinecap="round">
-        <path d="M12 41H40" stroke="#93C5FD" strokeWidth="3.4" />
-        <path d="M12 50H40" stroke="#BFDBFE" strokeWidth="3.4" opacity="0.9" />
-        <path d="M12 59H40" stroke="#DBEAFE" strokeWidth="3.4" opacity="0.72" />
+    <svg viewBox="0 0 31 48" className={cn("h-6 w-4", className)} fill="none" aria-hidden>
+      <g fill="#4f46e5">
+        <path d="m0 17.8433 30.9054-17.8433-.8189 12.6994-26.32053 15.1961z" />
+        <path d="m3.76562 27.8951 21.73568-12.5492-.8189 12.6994-17.15081 9.902z" opacity=".5" />
+        <path d="m7.5293 37.9477 12.566-7.255-.8189 12.6994-7.9811 4.6079z" opacity=".25" />
       </g>
-      <path d="M38.5 50L45.5 58L61 39" stroke="#fff" strokeWidth="7.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-export function AegisWordmark({ className }: { className?: string }) {
+export function WarpWordmark({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
-      <AegisMark className="h-6 w-6" />
-      <span className="font-semibold tracking-tight">
-        Aegis<span className="text-primary">Flow</span>
-      </span>
+      <WarpMark className="h-7 w-[18px]" />
+      <span className="font-semibold tracking-tight">Warp</span>
     </span>
   );
 }

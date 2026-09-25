@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 
-export const metadata = { title: "Business case — AegisFlow" };
+export const metadata = { title: "Business case — Warp" };
 
 function Stat({ value, label }: { value: string; label: string }) {
   return (
@@ -17,7 +17,7 @@ export default function BusinessPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Business case</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Why AegisFlow is a company, not a feature — for the Feasibility criterion.
+          Why Warp is a company, not a feature — for the Feasibility criterion.
         </p>
       </div>
 
@@ -84,9 +84,9 @@ export default function BusinessPage() {
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Competitive landscape</h2>
         <div className="space-y-2 text-sm text-muted-foreground">
-          <p><span className="font-medium text-foreground">Risk-monitoring platforms</span> (Everstream, Interos, Resilinc) tell you a disruption happened. They don&apos;t run the verified investigate → decide → document → sign response. AegisFlow starts where they stop.</p>
+          <p><span className="font-medium text-foreground">Risk-monitoring platforms</span> (Everstream, Interos, Resilinc) tell you a disruption happened. They don&apos;t run the verified investigate → decide → document → sign response. Warp starts where they stop.</p>
           <p><span className="font-medium text-foreground">Procurement suites</span> (SAP Ariba, Coupa) manage POs and approved vendors. They have no evidence-provenance model and no rapid-response workflow for a supplier that just failed.</p>
-          <p><span className="font-medium text-foreground">Generic AI agents</span> promise autonomous procurement. Buyers in regulated manufacturing will not let an agent commit spend. AegisFlow&apos;s &quot;AI prepares, human authorizes&quot; posture is the wedge, not a limitation.</p>
+          <p><span className="font-medium text-foreground">Generic AI agents</span> promise autonomous procurement. Buyers in regulated manufacturing will not let an agent commit spend. Warp&apos;s &quot;AI prepares, human authorizes&quot; posture is the wedge, not a limitation.</p>
         </div>
       </section>
 

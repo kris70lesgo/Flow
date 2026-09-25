@@ -13,25 +13,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://aegisflow.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "AegisFlow — AI incident response for critical procurement",
-    template: "%s · AegisFlow",
+    default: "Warp — AI incident response for critical procurement",
+    template: "%s · Warp",
   },
   description:
     "When a critical supplier fails, the AI does the four hours of investigation — reads the contracts and certificates, searches the live web, cross-checks every claim, scores the alternatives. Then it stops. A human keeps the pen.",
-  applicationName: "AegisFlow",
+  applicationName: "Warp",
   openGraph: {
-    title: "AegisFlow — AI incident response for critical procurement",
+    title: "Warp — AI incident response for critical procurement",
     description: "The AI does the four hours of investigation. A human keeps the pen.",
     url: "/",
-    siteName: "AegisFlow",
+    siteName: "Warp",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AegisFlow — AI incident response for critical procurement",
+    title: "Warp — AI incident response for critical procurement",
     description: "The AI does the four hours of investigation. A human keeps the pen.",
     images: ["/og.png"],
   },

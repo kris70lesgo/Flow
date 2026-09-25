@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { AegisWordmark } from "@/components/brand";
+import { WarpWordmark } from "@/components/brand";
 import { ResetDemoButton } from "@/components/reset-demo-button";
 import { DemoControls } from "@/components/demo-controls";
 
@@ -37,7 +37,7 @@ export function AppShell({
     <div className="min-h-screen bg-background">
       <aside className="fixed inset-y-0 left-0 flex w-60 flex-col border-r bg-card">
         <div className="flex h-14 items-center border-b px-5">
-          <AegisWordmark />
+          <WarpWordmark />
         </div>
         <nav className="flex-1 space-y-1 p-3">
           {NAV.map((item) => {

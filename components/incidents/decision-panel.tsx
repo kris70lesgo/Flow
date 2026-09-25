@@ -98,7 +98,7 @@ export function DecisionPanel({ incident, recommendation }: { incident: Incident
                     <div className="rounded-md border border-warning/40 bg-warning/10 p-3 text-xs text-foreground">
                       <p className="font-semibold">HUMAN ACTION REQUIRED</p>
                       <p className="mt-1 text-muted-foreground">
-                        AegisFlow prepared this agreement. Only an authorized human can sign it. Signing is irreversible.
+                        Warp prepared this agreement. Only an authorized human can sign it. Signing is irreversible.
                       </p>
                     </div>
                     <input name="signerName" required placeholder="Full name" className={inputCls} />

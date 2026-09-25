@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 /**
  * The money shot. When the cheapest alternative carries claims that do not survive
- * verification, AegisFlow says so — loudly — and refuses to treat them as true.
+ * verification, Warp says so — loudly — and refuses to treat them as true.
  */
 export function EvidenceConflict({ incident }: { incident: Incident }) {
   const flagged = incident.alternativeSuppliers
@@ -114,7 +114,7 @@ export function EvidenceConflict({ incident }: { incident: Incident }) {
 
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-destructive/30 bg-card p-3">
           <p className="text-sm">
-            <span className="font-semibold">AegisFlow does not treat these claims as true.</span>{" "}
+            <span className="font-semibold">Warp does not treat these claims as true.</span>{" "}
             <span className="text-muted-foreground">
               An integrity gate caps any supplier with an unresolved conflict at 49/100 — so even with the cost
               weight dragged to maximum, this supplier cannot win the recommendation.
