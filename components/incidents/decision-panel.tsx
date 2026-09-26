@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { approve, prepareDocuments, reject, requestEvidence, signAgreement } from "@/lib/orchestration/actions";
+import { isSafeNavigationUrl } from "@/lib/utils";
 
 const inputCls =
   "h-9 w-full rounded-md border bg-transparent px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
@@ -89,9 +90,11 @@ export function DecisionPanel({ incident, recommendation }: { incident: Incident
                     {doc.mode === "LIVE" ? "DOCTAVIAN" : "LOCAL RENDER"}
                   </Badge>
                 </div>
-                <a href={doc.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
-                  View agreement <ExternalLink className="h-3 w-3" />
-                </a>
+                {isSafeNavigationUrl(doc.url) ? (
+                  <a href={doc.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                    View agreement <ExternalLink className="h-3 w-3" />
+                  </a>
+                ) : <span className="text-xs text-muted-foreground">Agreement link unavailable</span>}
 
                 {incident.state === "SIGNATURE_REQUIRED" && (
                   <form action={signAgreement.bind(null, incident.id)} className="space-y-2 pt-2">

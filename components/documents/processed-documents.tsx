@@ -2,6 +2,7 @@ import { ExternalLink, FileSignature, FileText } from "lucide-react";
 import { Incident } from "@/schemas/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { isSafeNavigationUrl } from "@/lib/utils";
 
 export function ProcessedDocuments({ incident }: { incident: Incident }) {
   const docs = incident.documentsProcessed;
@@ -31,9 +32,11 @@ export function ProcessedDocuments({ incident }: { incident: Incident }) {
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   <Badge variant={d.mode === "LIVE" ? "success" : "muted"}>{d.mode}</Badge>
-                  <a href={d.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
-                    View <ExternalLink className="h-3 w-3" />
-                  </a>
+                  {isSafeNavigationUrl(d.url) ? (
+                    <a href={d.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                      View <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : <span className="text-xs text-muted-foreground">Unavailable link</span>}
                 </div>
               </li>
             ))}
@@ -53,9 +56,11 @@ export function ProcessedDocuments({ incident }: { incident: Incident }) {
                   <Badge variant={incident.generatedDocument.mode === "LIVE" ? "success" : "muted"}>
                     {incident.generatedDocument.mode === "LIVE" ? "DOCTAVIAN" : "LOCAL"}
                   </Badge>
-                  <a href={incident.generatedDocument.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
-                    View <ExternalLink className="h-3 w-3" />
-                  </a>
+                  {isSafeNavigationUrl(incident.generatedDocument.url) ? (
+                    <a href={incident.generatedDocument.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+                      View <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : <span className="text-xs text-muted-foreground">Unavailable link</span>}
                 </div>
               </li>
             )}

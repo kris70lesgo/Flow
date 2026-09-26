@@ -19,6 +19,7 @@ interface LiveStep {
 export function InvestigationConsole({ incident }: { incident: Incident }) {
   const router = useRouter();
   const [running, setRunning] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [steps, setSteps] = useState<LiveStep[]>(
     incident.auditLog
       .filter((e) => e.actor !== "HUMAN")
@@ -27,10 +28,15 @@ export function InvestigationConsole({ incident }: { incident: Incident }) {
 
   const start = async () => {
     setRunning(true);
+    setError(null);
     setSteps([]);
     try {
-      const res = await fetch(`/api/incidents/${incident.id}/investigate`);
-      const reader = res.body!.getReader();
+      const res = await fetch(`/api/incidents/${incident.id}/investigate`, { method: "POST" });
+      if (!res.ok || !res.body) {
+        const payload = await res.json().catch(() => null);
+        throw new Error(typeof payload?.error === "string" ? payload.error : "Unable to start the investigation.");
+      }
+      const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
       for (;;) {
@@ -42,13 +48,16 @@ export function InvestigationConsole({ incident }: { incident: Incident }) {
         for (const chunk of chunks) {
           if (!chunk.startsWith("data: ")) continue;
           const data = JSON.parse(chunk.slice(6));
-          if (data.done || data.error) continue;
+          if (data.done) continue;
+          if (data.error) throw new Error("The investigation could not finish. Please try again.");
           setSteps((prev) => [
             ...prev,
             { message: data.message, actor: data.actor, tag: data.tag, time: new Date().toISOString() },
           ]);
         }
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to start the investigation.");
     } finally {
       setRunning(false);
       router.refresh();
@@ -67,6 +76,7 @@ export function InvestigationConsole({ incident }: { incident: Incident }) {
         {running && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
       </CardHeader>
       <CardContent>
+        {error && <p role="alert" className="mb-3 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">{error}</p>}
         {steps.length === 0 && !running ? (
           <p className="text-sm text-muted-foreground">Click Run Response to start the investigation.</p>
         ) : (

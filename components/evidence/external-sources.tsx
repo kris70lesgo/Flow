@@ -2,6 +2,7 @@ import { Globe } from "lucide-react";
 import { Incident } from "@/schemas/core";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { isSafeNavigationUrl } from "@/lib/utils";
 
 export function ExternalSources({ incident }: { incident: Incident }) {
   const sources = incident.externalSources ?? [];
@@ -26,7 +27,7 @@ export function ExternalSources({ incident }: { incident: Incident }) {
               {sources.filter((s) => s.query === q).map((s) => (
                 <li key={s.id} className="rounded-md border p-3">
                   <div className="flex items-start justify-between gap-2">
-                    {s.url.startsWith("http") ? (
+                    {isSafeNavigationUrl(s.url) ? (
                       <a href={s.url} target="_blank" rel="noreferrer" className="text-sm font-medium hover:underline">
                         {s.title}
                       </a>
